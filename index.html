@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Plateforme de rapports administratifs (prototype)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+      color: #111;
+    }
+    header {
+      padding: 16px 24px;
+      border-bottom: 1px solid #ddd;
+      background: #fff;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+    header p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px 32px 16px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      grid-gap: 16px;
+    }
+    .sidebar {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
+    }
+    .sidebar-section {
+      margin-bottom: 16px;
+    }
+    .sidebar-section h2 {
+      font-size: 0.95rem;
+      margin: 0 0 8px 0;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
+    }
+    .checkbox-group {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 0.85rem;
+    }
+    .checkbox-item input {
+      margin-right: 6px;
+    }
+    .content {
+      min-width: 0;
+    }
+    .search-bar {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .search-bar label {
+      font-size: 0.85rem;
+      color: #333;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .search-bar input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .results-info {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .loading {
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+      padding: 40px;
+    }
+    .report-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .report-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+    .report-title {
+      margin: 0 0 4px 0;
+      font-size: 1rem;
+    }
+    .report-title a {
+      color: #004080;
+      text-decoration: none;
+    }
+    .report-title a:hover {
+      text-decoration: underline;
+    }
+    .report-meta {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .report-desc {
+      font-size: 0.9rem;
+      color: #222;
+      margin: 0;
+    }
+    footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+      font-size: 0.8rem;
+      color: #777;
+    }
+    @media (max-width: 800px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Plateforme de rapports administratifs (prototype)</h1>
+    <p>Index expérimental de rapports et documents institutionnels.</p>
+  </header>
+
+  <main>
+    <aside class="sidebar" aria-label="Filtres">
+      <div class="sidebar-section">
+        <h2>Institutions</h2>
+        <div id="institutionCheckboxes" class="checkbox-group">
+          <!-- Cases à cocher institutions -->
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <h2>Années</h2>
+        <div id="yearCheckboxes" class="checkbox-group">
+          <!-- Cases à cocher années -->
+        </div>
+      </div>
+    </aside>
+
+    <section class="content">
+      <div class="search-bar">
+        <label for="searchInput">Recherche plein texte (titre et description)</label>
+        <input type="text" id="searchInput" placeholder="Rechercher un rapport…">
+      </div>
+
+      <div class="results-info" id="resultsInfo">Chargement des rapports...</div>
+      <div id="loading" class="loading">Chargement des données depuis rapports.json...</div>
+      <ul class="report-list" id="reportList" style="display:none;"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <a href="admin.html">Admin – Ajouter un rapport</a> | 
+    Données stockées dans <code>rapports.json</code>
+  </footer>
+
+  <script>
+    let reports = [];
+    let isLoaded = false;
+
+    const reportListEl = document.getElementById("reportList");
+    const institutionCheckboxesEl = document.getElementById("institutionCheckboxes");
+    const yearCheckboxesEl = document.getElementById("yearCheckboxes");
+    const searchInputEl = document.getElementById("searchInput");
+    const resultsInfoEl = document.getElementById("resultsInfo");
+    const loadingEl = document.getElementById("loading");
+
+    function extractYear(dateStr) {
+      return dateStr ? dateStr.slice(0, 4) : "";
+    }
+
+    function createCheckbox(idPrefix, value, container) {
+      const id = idPrefix + "-" + value.replace(/\s+/g, "_");
+      const wrapper = document.createElement("div");
+      wrapper.className = "checkbox-item";
+
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.id = id;
+      input.value = value;
+      input.checked = true;
+
+      const label = document.createElement("label");
+      label.htmlFor = id;
+      label.textContent = value;
+
+      wrapper.appendChild(input);
+      wrapper.appendChild(label);
+      container.appendChild(wrapper);
+
+      input.addEventListener("change", filterReports);
+    }
+
+    function populateCheckboxes() {
+      const institutions = Array.from(new Set(reports.map(r => r.institution))).sort();
+      const years = Array.from(new Set(reports.map(r => extractYear(r.date)))).sort().reverse();
+
+      institutionCheckboxesEl.innerHTML = "";
+      yearCheckboxesEl.innerHTML = "";
+
+      institutions.forEach(inst => {
+        createCheckbox("inst", inst, institutionCheckboxesEl);
+      });
+
+      years.forEach(year => {
+        createCheckbox("year", year, yearCheckboxesEl);
+      });
+    }
+
+    function getCheckedValues(container) {
+      return Array.from(container.querySelectorAll("input[type='checkbox']:checked"))
+        .map(input => input.value);
+    }
+
+    function filterReports() {
+      if (!isLoaded) return;
+
+      const searchTerm = searchInputEl.value.toLowerCase().trim();
+      const selectedInstitutions = getCheckedValues(institutionCheckboxesEl);
+      const selectedYears = getCheckedValues(yearCheckboxesEl);
+
+      const filtered = reports.filter(r => {
+        const year = extractYear(r.date);
+        const matchesInstitution =
+          selectedInstitutions.length === 0 || selectedInstitutions.includes(r.institution);
+        const matchesYear =
+          selectedYears.length === 0 || selectedYears.includes(year);
+        const text = (r.title + " " + r.description).toLowerCase();
+        const matchesSearch = !searchTerm || text.includes(searchTerm);
+
+        return matchesInstitution && matchesYear && matchesSearch;
+      });
+
+      renderReports(filtered);
+    }
+
+    function renderReports(list) {
+      reportListEl.innerHTML = "";
+      resultsInfoEl.textContent = list.length === 0
+        ? "Aucun rapport trouvé."
+        : list.length + " rapport(s) affiché(s).";
+
+      list.forEach(r => {
+        const li = document.createElement("li");
+        li.className = "report-card";
+
+        const titleEl = document.createElement("h2");
+        titleEl.className = "report-title";
+        const linkEl = document.createElement("a");
+        linkEl.href = r.url;
+        linkEl.target = "_blank";
+        linkEl.rel = "noopener noreferrer";
+        linkEl.textContent = r.title;
+        titleEl.appendChild(linkEl);
+
+        const metaEl = document.createElement("div");
+        metaEl.className = "report-meta";
+        const date = r.date || "";
+        const year = extractYear(r.date);
+        metaEl.textContent =
+          (r.institution ? r.institution + " · " : "") +
+          (date ? "Publié le " + date : "") +
+          (year ? " (" + year + ")" : "");
+
+        const descEl = document.createElement("p");
+        descEl.className = "report-desc";
+        descEl.textContent = r.description || "";
+
+        li.appendChild(titleEl);
+        li.appendChild(metaEl);
+        li.appendChild(descEl);
+
+        reportListEl.appendChild(li);
+      });
+    }
+
+    // Chargement automatique des données
+    fetch('rapports.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Fichier rapports.json non trouvé');
+        }
+        return response.json();
+      })
+      .then(data => {
+        reports = data;
+        isLoaded = true;
+        loadingEl.style.display = "none";
+        reportListEl.style.display = "block";
+        populateCheckboxes();
+        filterReports();
+      })
+      .catch(error => {
+        loadingEl.innerHTML = "Erreur : fichier <code>rapports.json</code> manquant ou invalide.<br><a href='admin.html'>Créer des rapports avec admin.html</a>";
+        loadingEl.style.display = "block";
+        reportListEl.style.display = "none";
+      });
+
+    searchInputEl.addEventListener("input", filterReports);
+  </script>
+</body>
+</html>
+

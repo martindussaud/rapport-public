@@ -1,0 +1,45 @@
+[
+  {
+    "title": "Rapport sur l'évaluation de la dépense publique",
+    "institution": "Inspection générale des finances",
+    "date": "2024-10-15",
+    "url": "https://www.igf.finances.gouv.fr/",
+    "description": "Analyse des principaux leviers d'optimisation de la dépense publique en France."
+  },
+  {
+    "title": "Étude d'impact du projet de loi de finances 2025",
+    "institution": "Assemblée nationale",
+    "date": "2024-11-02",
+    "url": "https://www.assemblee-nationale.fr/",
+    "description": "Présentation des impacts macroéconomiques et budgétaires du PLF 2025."
+  },
+  {
+    "title": "Rapport annuel sur l'état de l'Union",
+    "institution": "Commission européenne",
+    "date": "2023-09-13",
+    "url": "https://ec.europa.eu/",
+    "description": "Bilan des priorités politiques de l'Union européenne et perspectives à moyen terme."
+  },
+  {
+    "title": "Audit des dispositifs de soutien aux entreprises",
+    "institution": "Inspection générale des finances",
+    "date": "2023-03-21",
+    "url": "https://www.igf.finances.gouv.fr/",
+    "description": "Évaluation de l'efficacité des dispositifs de soutien en période de crise."
+  },
+  {
+    "title": "Rapport d'information sur la transition énergétique",
+    "institution": "Assemblée nationale",
+    "date": "2022-06-30",
+    "url": "https://www.assemblee-nationale.fr/",
+    "description": "Analyse des instruments législatifs et budgétaires en faveur de la transition énergétique."
+  },
+  {
+  "title": "La pauvreté en héritage",
+  "institution": "Haut-Commissariat à la Stratégie et au Plan",
+  "date": "2026-02-12",
+  "url": "https://www.strategie-plan.gouv.fr/publications/la-pauvrete-en-heritage",
+  "description": "Comment, et à quel point, la pauvreté persiste-t-elle d’une génération à l’autre en France ?"
+  }
+]
+

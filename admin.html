@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Ajouter un rapport</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+      color: #111;
+    }
+    header {
+      padding: 16px 24px;
+      border-bottom: 1px solid #ddd;
+      background: #fff;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+    main {
+      max-width: 720px;
+      margin: 24px auto;
+      padding: 0 16px 32px 16px;
+    }
+    form {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 16px;
+    }
+    .field {
+      margin-bottom: 12px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+    .field input[type="text"],
+    .field input[type="date"],
+    .field textarea {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .field textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    button {
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      border: 1px solid #004080;
+      background: #004080;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003060;
+    }
+    .output {
+      margin-top: 20px;
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 12px;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.85rem;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .hint {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 8px;
+    }
+    a.back-link {
+      font-size: 0.85rem;
+      color: #004080;
+      text-decoration: none;
+    }
+    a.back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Admin – Ajouter un rapport</h1>
+  </header>
+
+  <main>
+    <p class="hint">
+      Remplissez le formulaire, cliquez sur "Générer", puis copiez-collez le bloc dans <code>rapports.json</code>.
+    </p>
+
+    <p class="hint">
+      <a href="index.html" class="back-link">← Retour à la plateforme</a>
+    </p>
+
+    <form id="reportForm">
+      <div class="field">
+        <label for="title">Titre</label>
+        <input type="text" id="title" required>
+      </div>
+      <div class="field">
+        <label for="institution">Institution</label>
+        <input type="text" id="institution" placeholder="Ex : Assemblée nationale" required>
+      </div>
+      <div class="field">
+        <label for="date">Date de publication</label>
+        <input type="date" id="date" required>
+      </div>
+      <div class="field">
+        <label for="url">Lien vers le document original</label>
+        <input type="text" id="url" placeholder="https://..." required>
+      </div>
+      <div class="field">
+        <label for="description">Description courte</label>
+        <textarea id="description" required></textarea>
+      </div>
+      <button type="submit">Générer le JSON</button>
+    </form>
+
+    <div class="hint">
+      Ajoutez ce bloc dans <code>rapports.json</code> (à la fin de la liste, avant le <code>]</code>, avec une virgule avant si nécessaire).
+    </div>
+
+    <div id="output" class="output" style="display:none;"></div>
+  </main>
+
+  <script>
+    const form = document.getElementById("reportForm");
+    const output = document.getElementById("output");
+
+    function escapeJsonString(str) {
+      return JSON.stringify(str).slice(1, -1);
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const title = document.getElementById("title").value.trim();
+      const institution = document.getElementById("institution").value.trim();
+      const date = document.getElementById("date").value.trim();
+      const url = document.getElementById("url").value.trim();
+      const description = document.getElementById("description").value.trim();
+
+      if (!title || !institution || !date || !url || !description) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+      }
+
+      const jsonObject = {
+        title: title,
+        institution: institution,
+        date: date,
+        url: url,
+        description: description
+      };
+
+      const jsonBlock = JSON.stringify(jsonObject, null, 2);
+
+      output.style.display = "block";
+      output.textContent = jsonBlock;
+      
+      output.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
+
