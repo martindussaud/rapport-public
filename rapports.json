@@ -35,11 +35,45 @@
     "description": "Analyse des instruments législatifs et budgétaires en faveur de la transition énergétique."
   },
   {
-  "title": "La pauvreté en héritage",
-  "institution": "Haut-Commissariat à la Stratégie et au Plan",
-  "date": "2026-02-12",
-  "url": "https://www.strategie-plan.gouv.fr/publications/la-pauvrete-en-heritage",
-  "description": "Comment, et à quel point, la pauvreté persiste-t-elle d’une génération à l’autre en France ?"
+    "title": "La pauvreté en héritage",
+    "institution": "Haut-Commissariat à la Stratégie et au Plan",
+    "date": "2026-02-12",
+    "url": "https://www.strategie-plan.gouv.fr/publications/la-pauvrete-en-heritage",
+    "description": "Comment, et à quel point, la pauvreté persiste-t-elle d’une génération à l’autre en France ?"
+  },
+  {
+    "title": "Pied de page",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr#footer",
+    "description": "Rapport administratif France: Pied de page"
+  },
+  {
+    "title": "Qui sommes-nous ?",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr/qui-sommes-nous",
+    "description": "Rapport administratif France: Qui sommes-nous ?"
+  },
+  {
+    "title": "Municipales 2026",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr/elections-municipales-et-communautaires-des-15-et-22-mars-2026",
+    "description": "Rapport administratif France: Municipales 2026"
+  },
+  {
+    "title": "Toute l'actualité",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr/actualites",
+    "description": "Rapport administratif France: Toute l'actualité"
+  },
+  {
+    "title": "Panorama des lois",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr/panorama-des-lois",
+    "description": "Rapport administratif France: Panorama des lois"
   }
 ]
-
