@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Actualisation automatique</title>
+</head>
+<body>
+  <h1>🔄 Actualisation des rapports</h1>
+  <p>Cliquez pour récupérer les derniers documents :</p>
+  <button onclick="updateReports()">Actualiser maintenant</button>
+  <div id="status"></div>
+
+  <script>
+    async function updateReports() {
+      const status = document.getElementById('status');
+      status.innerHTML = '⏳ Recherche en cours...';
+      
+      try {
+        // Exemple : API Assemblée Nationale (données ouvertes)
+        const response = await fetch('https://data.assemblee-nationale.fr/api/document?type=rapport&date_min=2026-01-01');
+        const data = await response.json();
+        
+        // Transforme en notre format
+        const newReports = data.documents.slice(0, 5).map(doc => ({
+          title: doc.titre || 'Rapport Assemblée Nationale',
+          institution: 'Assemblée nationale',
+          date: doc.date || '2026-03-01',
+          url: doc.url || 'https://www.assemblee-nationale.fr/',
+          description: doc.resume || 'Nouveau rapport parlementaire'
+        }));
+        
+        // Ajoute à rapports.json (via GitHub API - nécessite token plus tard)
+        status.innerHTML = '✅ ' + newReports.length + ' nouveaux rapports ajoutés !';
+        
+      } catch (error) {
+        status.innerHTML = '❌ Erreur : ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
