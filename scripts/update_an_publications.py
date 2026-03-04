@@ -20,13 +20,34 @@ import os
 import re
 import sys
 from datetime import datetime
+from html import unescape
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 from urllib.error import HTTPError, URLError
+from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
+AN_LISTING_URL = "https://www2.assemblee-nationale.fr/documents/liste?type=rapports-information&legis=17"
 AN_PUBLICATION_J = "https://www.assemblee-nationale.fr/dyn/opendata/list-publication/publication_j"
 AN_API_DOCUMENT = "https://data.assemblee-nationale.fr/api/document?type=rapport&num_page=1&num_items=200"
 DEFAULT_RAPPORTS_JSON = "rapports.json"
+
+FRENCH_MONTHS = {
+    "janvier": "01",
+    "février": "02",
+    "fevrier": "02",
+    "mars": "03",
+    "avril": "04",
+    "mai": "05",
+    "juin": "06",
+    "juillet": "07",
+    "août": "08",
+    "aout": "08",
+    "septembre": "09",
+    "octobre": "10",
+    "novembre": "11",
+    "décembre": "12",
+    "decembre": "12",
+}
 
 
 def _norm(s: Optional[str]) -> str:
@@ -53,7 +74,19 @@ def _parse_date(s: str) -> Optional[str]:
         dd, mm, yyyy = m.groups()
         return f"{yyyy}-{mm}-{dd}"
 
+    m = re.match(r"^(\d{1,2})\s+([A-Za-zéèêëàâîïôöùûüç]+)\s+(\d{4})$", s.lower())
+    if m:
+        dd, month_name, yyyy = m.groups()
+        mm = FRENCH_MONTHS.get(month_name)
+        if mm:
+            return f"{yyyy}-{mm}-{int(dd):02d}"
+
     return None
+
+
+def _cleanup_html_text(raw: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", raw)
+    return _norm(unescape(text))
 
 
 def _best_field(row: Dict[str, Any], candidates: Iterable[str]) -> Optional[str]:
@@ -201,10 +234,57 @@ def _parse_json_reports(text: str) -> List[Dict[str, str]]:
     return [rep for rep in (_to_report_from_api(d) for d in documents) if rep]
 
 
+def _parse_html_listing_reports(text: str, source_url: str) -> List[Dict[str, str]]:
+    blocks = re.findall(r"<article\b.*?</article>|<li\b.*?</li>|<tr\b.*?</tr>", text, flags=re.IGNORECASE | re.DOTALL)
+    if not blocks:
+        blocks = [text]
+
+    link_re = re.compile(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', flags=re.IGNORECASE | re.DOTALL)
+    date_re = re.compile(
+        r"(\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+[A-Za-zéèêëàâîïôöùûüç]+\s+\d{4})",
+        flags=re.IGNORECASE,
+    )
+
+    out: List[Dict[str, str]] = []
+    for block in blocks:
+        block_text = _cleanup_html_text(block)
+        date_match = date_re.search(block_text)
+        date = _parse_date(date_match.group(1)) if date_match else None
+        if not date:
+            continue
+
+        for href, label_html in link_re.findall(block):
+            if href.startswith("javascript:") or href.startswith("#"):
+                continue
+            label = _cleanup_html_text(label_html)
+            if len(label) < 15:
+                continue
+
+            url = urljoin(source_url, _norm(href))
+            if "assemblee-nationale.fr" not in url:
+                continue
+
+            out.append(
+                {
+                    "title": label,
+                    "institution": "Assemblée nationale",
+                    "date": date,
+                    "url": url,
+                    "description": f"Rapport d'information publié le {date}",
+                }
+            )
+            break
+
+    dedup: Dict[Tuple[str, str, str], Dict[str, str]] = {}
+    for row in out:
+        dedup[make_key(row)] = row
+    return list(dedup.values())
+
+
 def _fetch_candidates() -> List[Dict[str, str]]:
     errors: List[str] = []
 
-    for url, mode in ((AN_PUBLICATION_J, "mixed"), (AN_API_DOCUMENT, "json")):
+    for url, mode in ((AN_LISTING_URL, "html"), (AN_PUBLICATION_J, "mixed"), (AN_API_DOCUMENT, "json")):
         try:
             text = _download_text(url)
         except (URLError, HTTPError) as exc:
@@ -212,7 +292,9 @@ def _fetch_candidates() -> List[Dict[str, str]]:
             continue
 
         candidates: List[Dict[str, str]] = []
-        if mode == "json":
+        if mode == "html":
+            candidates = _parse_html_listing_reports(text, url)
+        elif mode == "json":
             candidates = _parse_json_reports(text)
         else:
             candidates = _parse_csv_reports(text)
