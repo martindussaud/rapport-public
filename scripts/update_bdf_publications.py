@@ -290,6 +290,11 @@ def main() -> int:
 
     if not new_items:
         print(f"Aucune nouvelle publication BDF détectée pour la date {today}.")
+    limited = candidates[: max(0, args.limit)]
+    new_items = [r for r in limited if make_key(r) not in existing_keys]
+
+    if not new_items:
+        print("Aucune nouvelle publication BDF détectée.")
         return 0
 
     merged = existing + new_items
