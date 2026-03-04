@@ -22,6 +22,7 @@ import os
 import re
 import sys
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from html import unescape
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 from urllib.error import HTTPError, URLError
@@ -231,6 +232,10 @@ def _extract_from_html_links(html: str, page_url: str) -> List[Dict[str, str]]:
     return out
 
 
+def _today_in_paris_iso() -> str:
+    return datetime.now(ZoneInfo("Europe/Paris")).date().isoformat()
+
+
 def fetch_bdf_publications(url: str = BDF_PUBLICATIONS_URL) -> List[Dict[str, str]]:
     html = _download_text(url)
 
@@ -254,6 +259,7 @@ def main() -> int:
     parser.add_argument("--url", default=BDF_PUBLICATIONS_URL, help="URL source des publications")
     parser.add_argument("--rapports", default=os.environ.get("RAPPORTS_JSON", DEFAULT_RAPPORTS_JSON), help="Chemin vers rapports.json")
     parser.add_argument("--limit", type=int, default=50, help="Nombre maximum de publications à ajouter")
+    parser.add_argument("--today", default=_today_in_paris_iso(), help="Date ISO à conserver (par défaut: aujourd'hui Europe/Paris)")
     args = parser.parse_args()
 
     existing = load_existing(args.rapports)
@@ -269,6 +275,21 @@ def main() -> int:
         print("Aucune publication BDF détectée.", file=sys.stderr)
         return 2
 
+    today = _parse_date(args.today)
+    if not today:
+        print(f"Date invalide pour --today: {args.today}", file=sys.stderr)
+        return 2
+
+    today_candidates = [r for r in candidates if _norm(str(r.get("date", ""))) == today]
+    if not today_candidates:
+        print(f"Aucune publication BDF trouvée pour la date {today}.")
+        return 0
+
+    limited = today_candidates[: max(0, args.limit)]
+    new_items = [r for r in limited if make_key(r) not in existing_keys]
+
+    if not new_items:
+        print(f"Aucune nouvelle publication BDF détectée pour la date {today}.")
     limited = candidates[: max(0, args.limit)]
     new_items = [r for r in limited if make_key(r) not in existing_keys]
 
