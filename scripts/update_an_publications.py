@@ -4,8 +4,11 @@
 """
 Met à jour rapports.json à partir des publications de l'Assemblée nationale.
 
-Objectif principal: ne pas casser le workflow GitHub Actions si une source AN
-change ou tombe temporairement.
+Cette version est volontairement robuste :
+- pas de dépendance externe (urllib au lieu de requests)
+- accepte plusieurs formats de réponse (CSV ou JSON)
+- filtre les contenus non pertinents (navigation, footer, etc.)
+- normalise les champs au format attendu par index.html
 """
 
 from __future__ import annotations
@@ -21,13 +24,8 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-AN_SOURCES: List[Tuple[str, str]] = [
-    ("https://www.assemblee-nationale.fr/dyn/opendata/list-publication/publication_j", "mixed"),
-    # endpoint historique (peut renvoyer 404 selon les évolutions de l'API)
-    ("https://data.assemblee-nationale.fr/api/document?type=rapport&num_page=1&num_items=200", "json"),
-    # fallback plus tolérant sur certains environnements
-    ("https://data.assemblee-nationale.fr/api/document?type=rapport", "json"),
-]
+AN_PUBLICATION_J = "https://www.assemblee-nationale.fr/dyn/opendata/list-publication/publication_j"
+AN_API_DOCUMENT = "https://data.assemblee-nationale.fr/api/document?type=rapport&num_page=1&num_items=200"
 DEFAULT_RAPPORTS_JSON = "rapports.json"
 
 
@@ -40,12 +38,17 @@ def _parse_date(s: str) -> Optional[str]:
     if not s:
         return None
 
-    m = re.match(r"^(\d{4})-(\d{2})-(\d{2})", s)
+    patterns = [
+        r"^(\d{4})-(\d{2})-(\d{2})",  # YYYY-MM-DD
+        r"^(\d{2})/(\d{2})/(\d{4})",  # DD/MM/YYYY
+    ]
+
+    m = re.match(patterns[0], s)
     if m:
         yyyy, mm, dd = m.groups()
         return f"{yyyy}-{mm}-{dd}"
 
-    m = re.match(r"^(\d{2})/(\d{2})/(\d{4})", s)
+    m = re.match(patterns[1], s)
     if m:
         dd, mm, yyyy = m.groups()
         return f"{yyyy}-{mm}-{dd}"
@@ -67,57 +70,38 @@ def _best_field(row: Dict[str, Any], candidates: Iterable[str]) -> Optional[str]
 
 def _looks_like_report_blob(blob: str) -> bool:
     b = blob.lower()
-    include_terms = ["rapport", "rapport d'information", "mission d'information", "commission d'enquête"]
-    exclude_terms = ["footer", "pied de page", "plan du site", "mentions légales", "contact"]
+    include_terms = [
+        "rapport",
+        "rapport d'information",
+        "mission d'information",
+        "commission d'enquête",
+    ]
+    exclude_terms = [
+        "footer",
+        "pied de page",
+        "plan du site",
+        "mentions légales",
+        "contact",
+    ]
     return any(t in b for t in include_terms) and not any(t in b for t in exclude_terms)
 
 
 def _to_report_from_row(row: Dict[str, Any]) -> Optional[Dict[str, str]]:
-    title = _best_field(
-        row,
-        [
-            "titre",
-            "title",
-            "libelle",
-            "intitule",
-            "objet",
-            "titre_publication",
-            "nom",
-        ],
-    ) or ""
-    date_raw = _best_field(
-        row,
-        [
-            "date",
-            "date_publication",
-            "datepublication",
-            "publication",
-            "published",
-            "dat",
-            "date_creation",
-        ],
-    ) or ""
-    url = _best_field(
-        row,
-        ["url", "lien", "link", "uri", "adresse", "permalink", "url_publication", "lien_publication"],
-    ) or ""
-    description = _best_field(row, ["resume", "résumé", "description", "descriptif", "contenu"]) or ""
+    title = _best_field(row, ["titre", "title", "libelle", "intitule", "objet"]) or ""
+    date_raw = _best_field(row, ["date", "date_publication", "datepublication", "publication", "published", "dat"]) or ""
+    url = _best_field(row, ["url", "lien", "link", "uri", "adresse", "permalink"]) or ""
+    description = _best_field(row, ["resume", "résumé", "description", "descriptif"]) or ""
 
-    blob = " ".join(_norm(str(v)) for v in row.values())
-    if not title:
-        # fallback: si pas de champ titre explicite, on tente d'utiliser le blob (tronqué)
-        title = _norm(blob)[:180]
     if not title or not url:
         return None
-    if not _looks_like_report_blob(f"{title} {blob}"):
+
+    blob = " ".join(_norm(str(v)) for v in row.values())
+    if not _looks_like_report_blob(blob):
         return None
 
     date = _parse_date(date_raw)
     if not date:
         return None
-
-    if url.startswith("/"):
-        url = f"https://www.assemblee-nationale.fr{url}"
 
     return {
         "title": title,
@@ -129,17 +113,17 @@ def _to_report_from_row(row: Dict[str, Any]) -> Optional[Dict[str, str]]:
 
 
 def _to_report_from_api(doc: Dict[str, Any]) -> Optional[Dict[str, str]]:
-    title = _norm(str(doc.get("titre") or doc.get("title") or ""))
-    uri = _norm(str(doc.get("uri") or doc.get("url") or doc.get("lien") or ""))
-    date = _parse_date(_norm(str(doc.get("date") or doc.get("date_publication") or "")))
-    description = _norm(str(doc.get("resume") or doc.get("description") or ""))
+    title = _norm(str(doc.get("titre", "")))
+    uri = _norm(str(doc.get("uri", "")))
+    date = _parse_date(_norm(str(doc.get("date", ""))))
+    description = _norm(str(doc.get("resume", "")))
 
     if not title or not uri or not date:
         return None
     if not _looks_like_report_blob(f"{title} {description}"):
         return None
 
-    if uri.startswith(("http://", "https://")):
+    if uri.startswith("http://") or uri.startswith("https://"):
         url = uri
     else:
         url = f"https://data.assemblee-nationale.fr{uri}"
@@ -220,14 +204,21 @@ def _parse_json_reports(text: str) -> List[Dict[str, str]]:
 def _fetch_candidates() -> List[Dict[str, str]]:
     errors: List[str] = []
 
-    for url, mode in AN_SOURCES:
+    for url, mode in ((AN_PUBLICATION_J, "mixed"), (AN_API_DOCUMENT, "json")):
         try:
             text = _download_text(url)
         except (URLError, HTTPError) as exc:
             errors.append(f"{url}: {exc}")
             continue
 
-        candidates = _parse_json_reports(text) if mode == "json" else (_parse_csv_reports(text) or _parse_json_reports(text))
+        candidates: List[Dict[str, str]] = []
+        if mode == "json":
+            candidates = _parse_json_reports(text)
+        else:
+            candidates = _parse_csv_reports(text)
+            if not candidates:
+                candidates = _parse_json_reports(text)
+
         if candidates:
             return candidates
 
@@ -246,10 +237,10 @@ def main() -> int:
 
     candidates = _fetch_candidates()
     if not candidates:
-        # Important: on n'échoue pas le workflow si la source AN est indisponible.
-        print("Aucun rapport AN détecté depuis les sources configurées. On conserve rapports.json inchangé.")
-        return 0
+        print("Aucun rapport AN détecté depuis les sources configurées.", file=sys.stderr)
+        return 2
 
+    # Limite de sécurité pour éviter des ajouts massifs involontaires
     candidates = candidates[:200]
 
     new_items = [r for r in candidates if make_key(r) not in existing_keys]
