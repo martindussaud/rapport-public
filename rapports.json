@@ -1,10 +1,101 @@
 [
   {
-    "title": "Rapport sur l'évaluation de la dépense publique",
-    "institution": "Inspection générale des finances",
-    "date": "2024-10-15",
-    "url": "https://www.igf.finances.gouv.fr/",
-    "description": "Analyse des principaux leviers d'optimisation de la dépense publique en France."
+    "title": "Statistiques",
+    "institution": "Banque de France",
+    "date": "2026-03-04",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/statistiques",
+    "description": "Publication Banque de France du 2026-03-04"
+  },
+  {
+    "title": "Publications",
+    "institution": "Banque de France",
+    "date": "2026-03-04",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications",
+    "description": "Publication Banque de France du 2026-03-04"
+  },
+  {
+    "title": "Page suivante",
+    "institution": "Banque de France",
+    "date": "2026-03-04",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=1",
+    "description": "Publication Banque de France du 2026-03-04"
+  },
+  {
+    "title": "Page courante 1",
+    "institution": "Banque de France",
+    "date": "2026-03-04",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=0",
+    "description": "Publication Banque de France du 2026-03-04"
+  },
+  {
+    "title": "Outils statistiques",
+    "institution": "Banque de France",
+    "date": "2026-03-04",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/outils-statistiques",
+    "description": "Publication Banque de France du 2026-03-04"
+  },
+  {
+    "title": "Dernière page 527",
+    "institution": "Banque de France",
+    "date": "2026-03-04",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=526",
+    "description": "Publication Banque de France du 2026-03-04"
+  },
+  {
+    "title": "Bloc-notes Éco",
+    "institution": "Banque de France",
+    "date": "2026-03-04",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/bloc-note-eco",
+    "description": "Publication Banque de France du 2026-03-04"
+  },
+  {
+    "title": "Toute l'actualité",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr/actualites",
+    "description": "Rapport administratif France: Toute l'actualité"
+  },
+  {
+    "title": "Qui sommes-nous ?",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr/qui-sommes-nous",
+    "description": "Rapport administratif France: Qui sommes-nous ?"
+  },
+  {
+    "title": "Pied de page",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr#footer",
+    "description": "Rapport administratif France: Pied de page"
+  },
+  {
+    "title": "Panorama des lois",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr/panorama-des-lois",
+    "description": "Rapport administratif France: Panorama des lois"
+  },
+  {
+    "title": "Municipales 2026",
+    "institution": "ViePublique.fr (officiel)",
+    "date": "2026-03-01",
+    "url": "https://www.vie-publique.fr/elections-municipales-et-communautaires-des-15-et-22-mars-2026",
+    "description": "Rapport administratif France: Municipales 2026"
+  },
+  {
+    "title": "Date de mise en ligne",
+    "institution": "Assemblée nationale",
+    "date": "2026-02-26",
+    "url": "https://www2.assemblee-nationale.fr/documents/liste?limit=150&amp;type=rapports-information&amp;legis=17&amp;type_tri=DATE_MISE_LIGNE",
+    "description": "Rapport d'information publié le 2026-02-26"
+  },
+  {
+    "title": "La pauvreté en héritage",
+    "institution": "Haut-Commissariat à la Stratégie et au Plan",
+    "date": "2026-02-12",
+    "url": "https://www.strategie-plan.gouv.fr/publications/la-pauvrete-en-heritage",
+    "description": "Comment, et à quel point, la pauvreté persiste-t-elle d’une génération à l’autre en France ?"
   },
   {
     "title": "Étude d'impact du projet de loi de finances 2025",
@@ -12,6 +103,13 @@
     "date": "2024-11-02",
     "url": "https://www.assemblee-nationale.fr/",
     "description": "Présentation des impacts macroéconomiques et budgétaires du PLF 2025."
+  },
+  {
+    "title": "Rapport sur l'évaluation de la dépense publique",
+    "institution": "Inspection générale des finances",
+    "date": "2024-10-15",
+    "url": "https://www.igf.finances.gouv.fr/",
+    "description": "Analyse des principaux leviers d'optimisation de la dépense publique en France."
   },
   {
     "title": "Rapport annuel sur l'état de l'Union",
@@ -33,47 +131,5 @@
     "date": "2022-06-30",
     "url": "https://www.assemblee-nationale.fr/",
     "description": "Analyse des instruments législatifs et budgétaires en faveur de la transition énergétique."
-  },
-  {
-    "title": "La pauvreté en héritage",
-    "institution": "Haut-Commissariat à la Stratégie et au Plan",
-    "date": "2026-02-12",
-    "url": "https://www.strategie-plan.gouv.fr/publications/la-pauvrete-en-heritage",
-    "description": "Comment, et à quel point, la pauvreté persiste-t-elle d’une génération à l’autre en France ?"
-  },
-  {
-    "title": "Pied de page",
-    "institution": "ViePublique.fr (officiel)",
-    "date": "2026-03-01",
-    "url": "https://www.vie-publique.fr#footer",
-    "description": "Rapport administratif France: Pied de page"
-  },
-  {
-    "title": "Qui sommes-nous ?",
-    "institution": "ViePublique.fr (officiel)",
-    "date": "2026-03-01",
-    "url": "https://www.vie-publique.fr/qui-sommes-nous",
-    "description": "Rapport administratif France: Qui sommes-nous ?"
-  },
-  {
-    "title": "Municipales 2026",
-    "institution": "ViePublique.fr (officiel)",
-    "date": "2026-03-01",
-    "url": "https://www.vie-publique.fr/elections-municipales-et-communautaires-des-15-et-22-mars-2026",
-    "description": "Rapport administratif France: Municipales 2026"
-  },
-  {
-    "title": "Toute l'actualité",
-    "institution": "ViePublique.fr (officiel)",
-    "date": "2026-03-01",
-    "url": "https://www.vie-publique.fr/actualites",
-    "description": "Rapport administratif France: Toute l'actualité"
-  },
-  {
-    "title": "Panorama des lois",
-    "institution": "ViePublique.fr (officiel)",
-    "date": "2026-03-01",
-    "url": "https://www.vie-publique.fr/panorama-des-lois",
-    "description": "Rapport administratif France: Panorama des lois"
   }
 ]
