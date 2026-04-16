@@ -145,5 +145,12 @@
     "date": "2022-06-30",
     "url": "https://www.assemblee-nationale.fr/",
     "description": "Analyse des instruments législatifs et budgétaires en faveur de la transition énergétique."
+  },
+  {
+    "title": "Date de mise en ligne",
+    "institution": "Assemblée nationale",
+    "date": "2020-12-16",
+    "url": "https://www2.assemblee-nationale.fr/documents/liste?limit=150&amp;type=rapports-information&amp;legis=17&amp;type_tri=DATE_MISE_LIGNE",
+    "description": "Rapport d'information publié le 2020-12-16"
   }
 ]
