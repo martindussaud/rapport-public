@@ -1,5 +1,54 @@
 [
   {
+    "title": "Statistiques",
+    "institution": "Banque de France",
+    "date": "2026-06-01",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/statistiques",
+    "description": "Publication Banque de France du 2026-06-01"
+  },
+  {
+    "title": "Publications",
+    "institution": "Banque de France",
+    "date": "2026-06-01",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications",
+    "description": "Publication Banque de France du 2026-06-01"
+  },
+  {
+    "title": "Page suivante",
+    "institution": "Banque de France",
+    "date": "2026-06-01",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=1",
+    "description": "Publication Banque de France du 2026-06-01"
+  },
+  {
+    "title": "Page courante 1",
+    "institution": "Banque de France",
+    "date": "2026-06-01",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=0",
+    "description": "Publication Banque de France du 2026-06-01"
+  },
+  {
+    "title": "Outils statistiques",
+    "institution": "Banque de France",
+    "date": "2026-06-01",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/outils-statistiques",
+    "description": "Publication Banque de France du 2026-06-01"
+  },
+  {
+    "title": "Dernière page 118",
+    "institution": "Banque de France",
+    "date": "2026-06-01",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=117",
+    "description": "Publication Banque de France du 2026-06-01"
+  },
+  {
+    "title": "Bloc-notes Éco",
+    "institution": "Banque de France",
+    "date": "2026-06-01",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/bloc-note-eco",
+    "description": "Publication Banque de France du 2026-06-01"
+  },
+  {
     "title": "Date de mise en ligne",
     "institution": "Assemblée nationale",
     "date": "2026-05-28",
