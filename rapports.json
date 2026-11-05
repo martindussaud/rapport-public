@@ -2,6 +2,55 @@
   {
     "title": "Statistiques",
     "institution": "Banque de France",
+    "date": "2026-11-05",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/statistiques",
+    "description": "Publication Banque de France du 2026-11-05"
+  },
+  {
+    "title": "Publications",
+    "institution": "Banque de France",
+    "date": "2026-11-05",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications",
+    "description": "Publication Banque de France du 2026-11-05"
+  },
+  {
+    "title": "Page suivante",
+    "institution": "Banque de France",
+    "date": "2026-11-05",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=1",
+    "description": "Publication Banque de France du 2026-11-05"
+  },
+  {
+    "title": "Page courante 1",
+    "institution": "Banque de France",
+    "date": "2026-11-05",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=0",
+    "description": "Publication Banque de France du 2026-11-05"
+  },
+  {
+    "title": "Outils statistiques",
+    "institution": "Banque de France",
+    "date": "2026-11-05",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/outils-statistiques",
+    "description": "Publication Banque de France du 2026-11-05"
+  },
+  {
+    "title": "Dernière page 125",
+    "institution": "Banque de France",
+    "date": "2026-11-05",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=124",
+    "description": "Publication Banque de France du 2026-11-05"
+  },
+  {
+    "title": "Bloc-notes Éco",
+    "institution": "Banque de France",
+    "date": "2026-11-05",
+    "url": "https://www.banque-france.fr/fr/publications-et-statistiques/bloc-note-eco",
+    "description": "Publication Banque de France du 2026-11-05"
+  },
+  {
+    "title": "Statistiques",
+    "institution": "Banque de France",
     "date": "2026-11-04",
     "url": "https://www.banque-france.fr/fr/publications-et-statistiques/statistiques",
     "description": "Publication Banque de France du 2026-11-04"
@@ -40,6 +89,13 @@
     "date": "2026-11-04",
     "url": "https://www.banque-france.fr/fr/publications-et-statistiques/publications?page=124",
     "description": "Publication Banque de France du 2026-11-04"
+  },
+  {
+    "title": "Date de mise en ligne",
+    "institution": "Assemblée nationale",
+    "date": "2026-11-04",
+    "url": "https://www2.assemblee-nationale.fr/documents/liste?limit=150&amp;type=rapports-information&amp;legis=17&amp;type_tri=DATE_MISE_LIGNE",
+    "description": "Rapport d'information publié le 2026-11-04"
   },
   {
     "title": "Bloc-notes Éco",
